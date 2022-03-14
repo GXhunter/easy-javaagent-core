@@ -7,10 +7,16 @@
     <groupId>com.gxhunter.agent</groupId>
     <artifactId>easy-agent-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
+    <packaging>jar</packaging>
     <name>${artifactId}</name>
     <description>javaagent core sdk framework</description>
-
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <agent.entry.class>com.gxhunter.agent.core.Launcher</agent.entry.class>
@@ -175,11 +181,11 @@
             <distributionManagement>
                 <snapshotRepository>
                     <id>ossrh</id>
-                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
                 </snapshotRepository>
                 <repository>
                     <id>ossrh</id>
-                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
         </profile>
