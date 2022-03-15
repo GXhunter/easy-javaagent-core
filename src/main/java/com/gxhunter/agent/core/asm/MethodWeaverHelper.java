@@ -30,7 +30,7 @@ public class MethodWeaverHelper {
      */
     private final Map<String, Map<String, MethodCallback>> methodVisitorCache = new ConcurrentHashMap<>();
 
-    private final Map<String, MethodCallback> empty = new HashMap<>();
+    private static final Map<String, MethodCallback> empty = new HashMap<>();
 
     public static void register(Class<?> clazz) {
         if (!clazz.isAnnotationPresent(ClassWeaver.class)) {
@@ -45,25 +45,27 @@ public class MethodWeaverHelper {
             if (method.getReturnType() != MethodAdvice.class) {
                 throw new IllegalStateException(method.getName() + "方法返回值只能是" + MethodAdvice.class.getSimpleName());
             }
-            if (method.getParameterCount()!=0) {
+            if (method.getParameterCount() != 0) {
                 throw new IllegalStateException(method.getName() + "必须是无参方法" + MethodVisitor.class.getSimpleName());
             }
             if (!Modifier.isStatic(method.getModifiers())) {
                 throw new IllegalStateException(method.getName() + "不是静态方法");
             }
-            methodWeaverHelper.wovenMethod(method.getAnnotation(MethodWeaver.class).methodName(),
+            methodWeaverHelper.wovenMethod(
+                    method.getAnnotation(MethodWeaver.class).methodName(),
                     method.getAnnotation(MethodWeaver.class).methodSign(),
-                    (access, methodName, descriptor, signature, exceptions, methodVisitor) -> new MethodVisitor(Opcodes.ASM9,null) {
-                        @Override
-                        public void visitCode() {
-                            try {
-                                System.out.println("method enhance:"+methodName+"@"+targetClass);
-                                ((MethodAdvice) method.invoke(clazz)).visitCode(methodVisitor);
-                            } catch (IllegalAccessException | InvocationTargetException e) {
-                                e.printStackTrace();
+                    (access, methodName, descriptor, signature, exceptions, methodVisitor) ->
+                            new MethodVisitor(Opcodes.ASM9, null) {
+                                @Override
+                                public void visitCode() {
+                                    try {
+                                        System.out.println("method enhance:" + methodName + "@" + targetClass);
+                                        ((MethodAdvice) method.invoke(clazz)).visitCode(methodVisitor);
+                                    } catch (IllegalAccessException | InvocationTargetException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
-                        }
-                    }
             );
         }
     }
@@ -84,7 +86,7 @@ public class MethodWeaverHelper {
     }
 
     public MethodCallback getMethodVisitor(String methodName, String parameterSign) {
-        return methodVisitorCache.getOrDefault(methodName, empty).getOrDefault(parameterSign,(access, name, descriptor, signature, exceptions, methodVisitor) -> methodVisitor);
+        return methodVisitorCache.getOrDefault(methodName, empty).getOrDefault(parameterSign, (access, name, descriptor, signature, exceptions, methodVisitor) -> methodVisitor);
     }
 
 

@@ -4,12 +4,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URLEncoder;
 
 public class test {
     public static void main(String[] args) throws IOException {
-        String uriString = "http://test,,,,.e.4399.cn/adp-server/agent_plugin/download?code=core.jar";
+        String uriString = new File("D:\\code\\agent-debug-plugin\\target\\local-debug-plugin-jar-with-dependencies.jar").toURI().toString();
         uriString = URLEncoder.encode(uriString, "UTF-8");
         System.out.println(uriString);
 
