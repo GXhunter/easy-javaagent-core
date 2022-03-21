@@ -3,92 +3,31 @@
 > 引入核心包后继承相关类快速实现jvm级aop，无视final、private、protect。
 
 # 开始使用
-1. 引入核心依赖(暂未上传到maven仓库，自行install)
-    ```xml
-      <dependency>
-            <groupId>com.gxhunter.agent</groupId>
-            <artifactId>easy-agent-core</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-    ```
+1. 创建空maven项目
     
-2. maven pom.xml 新增一下几个核心配置
+2. 在pom.xml,引入parent包,并配置属性
+    ```xml
+        <parent>
+            <artifactId>hunter-agent-parent</artifactId>
+            <groupId>io.github.gxhunter</groupId>
+            <version>仓库新版</version>
+        </parent>
+        <properties>
+            <author>hunter</author>
+            <agent.name>cloud-debug-agent</agent.name>
+            <agent.entry.class>com.gxhunter.InitAgent</agent.entry.class>
+        </properties>
     ```
-        <build>
-        <finalName>${name}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                    <encoding>UTF-8</encoding>
-                    <compilerArgument>-XDignore.symbol.file</compilerArgument>
-                    <fork>true</fork>
-   
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                        <manifestEntries>
-                            <Manifest-Version>${version}</Manifest-Version>
-                            <Plugin-Name>${name}</Plugin-Name>
-                            <Built-By>${author}</Built-By>
-                            <Hunter-Agent-Plugin-Entry>${entryClassPath}</Hunter-Agent-Plugin-Entry>
-                        </manifestEntries>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                        <manifestEntries>
-                            <Manifest-Version>${version}</Manifest-Version>
-                            <Plugin-Name>${name}</Plugin-Name>
-                            <Built-By>${author}</Built-By>
-                            <Hunter-Agent-Plugin-Entry>${entryClassPath}</Hunter-Agent-Plugin-Entry>
-                        </manifestEntries>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-   ```
-   其中：
-   1. name: 项目名称
-   2. author: 作者
-   3. entryClassPath: 入口类
-   4. version: 版本
-   
+    其中：
+    
+   | 属性              | 描述     | 是否必须 |
+    | ----------------- | -------- | -------- |
+    | author            | 项目作者 | 是       |
+    | agent.name        | 项目名称 | 是       |
+    | agent.entry.class | 项目入口 | 是       |
+    
+    
+    
 3. AOP方法拦截
    1. 随便创建一个类
    2. 指定拦截Class: 在类上添加注解 `@ClassWeaver("com.xx")`,指定要拦截的对象全路径包名
@@ -110,6 +49,7 @@
    
 4. 编写入口类
    上述配置的 ${entryClassPath} ,实现接口 `com.gxhunter.agent.core.plugin.PluginEntry`
+   
    1. `com.gxhunter.agent.core.plugin.PluginEntry.weavers` : 方法拦截器(就是上述的AOP类)
    2. `com.gxhunter.agent.core.plugin.PluginEntry.init`: 初始化回调(一些初始化的操作放在这里，一般什么都不需要做)
    
