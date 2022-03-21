@@ -14,7 +14,7 @@ import java.net.URLDecoder;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public class Launcher implements AgentConst.ExitCode, AgentConst.ManiFestAttrKey,AgentConst.LogPrinter {
+public class Launcher implements AgentConst.ExitCode, AgentConst.ManiFestAttrKey, AgentConst.LogPrinter {
     private static boolean loaded = false;
 
     public static void agentmain(String args, Instrumentation inst) {
@@ -40,18 +40,22 @@ public class Launcher implements AgentConst.ExitCode, AgentConst.ManiFestAttrKey
             File agentFile = new File(jarURI);
             JarFile jarFile = new JarFile(agentFile);
             printUsage(jarFile.getManifest());
-            inst.appendToBootstrapClassLoaderSearch(jarFile);
-            for (String pluginUri : args.split(",")) {
-                pluginUri = URLDecoder.decode(pluginUri, "UTF-8");
-                File pluginFile = File.createTempFile("plugin", ".jar");
-                try (FileOutputStream fos = new FileOutputStream(pluginFile);
-                     InputStream in = IOUtils.download(pluginUri);
-                ) {
-                    IOUtils.copy(in, fos);
-                    Initializer.init(inst, pluginFile,pluginUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.exit(EXIT_SSH_ERROR);
+            if (args == null || args.isEmpty()) {
+                Initializer.init(inst,agentFile,jarURI.toString());
+            } else {
+                inst.appendToBootstrapClassLoaderSearch(jarFile);
+                for (String pluginUri : args.split(",")) {
+                    pluginUri = URLDecoder.decode(pluginUri, "UTF-8");
+                    File pluginFile = File.createTempFile("plugin", ".jar");
+                    try (FileOutputStream fos = new FileOutputStream(pluginFile);
+                         InputStream in = IOUtils.download(pluginUri);
+                    ) {
+                        IOUtils.copy(in, fos);
+                        Initializer.init(inst, pluginFile, pluginUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.exit(EXIT_SSH_ERROR);
+                    }
                 }
             }
         } catch (URISyntaxException | IOException | IllegalAccessException e) {
