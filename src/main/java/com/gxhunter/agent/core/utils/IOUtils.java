@@ -42,6 +42,7 @@ public class IOUtils implements AgentConst {
         try {
             URL url = new URL(urlString);
             URLConnection urlConnection = url.openConnection();
+            urlConnection.setRequestProperty("Content-type", "application/json");
             urlConnection.connect();
             try (InputStream inputStream = urlConnection.getInputStream()) {
                 StringBuilder sb = new StringBuilder();

@@ -28,7 +28,7 @@ public class HunterTransformer implements ClassFileTransformer {
             @Override
             public MethodVisitor visitMethod(int access, String methodName, String descriptor, String signature, String[] exceptions) {
                 MethodVisitor mv = this.cv.visitMethod(access, methodName, descriptor, signature, exceptions);
-                return methodSign.getMethodVisitor(methodName, descriptor).visitMethod(access, methodName, descriptor, signature, exceptions, mv);
+                return methodSign.getMethodVisitor(methodName, signature==null?descriptor:signature).visitMethod(access, methodName, descriptor, signature, exceptions, mv);
             }
         }, Opcodes.F_FULL);
         return cw.toByteArray();
