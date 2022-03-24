@@ -20,18 +20,6 @@ public class IOUtils implements AgentConst {
         return urlConnection.getInputStream();
     }
 
-    public static InetAddress localIp(String preference) {
-        int min = Integer.MAX_VALUE;
-        final AtomicReference<InetAddress> host = new AtomicReference<>();
-        for (InetAddress inetAddress : localIps()) {
-            if (StringUtils.difference(inetAddress.getHostAddress(), preference).length() < min) {
-                min = StringUtils.difference(inetAddress.getHostAddress(), preference).length();
-                host.set(inetAddress);
-            }
-        }
-        return host.get();
-    }
-
     public static List<InetAddress> localIps() {
         List<InetAddress> localAddress = new ArrayList<>();
         try {

@@ -20,6 +20,9 @@ public class HunterTransformer implements ClassFileTransformer {
     }
 
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) {
+        if (className == null) {
+            return classfileBuffer;
+        }
         String targetFullClassName = className.replaceAll("/", "\\.");
         MethodWeaverHelper methodSign = plugin.getOrDefault(targetFullClassName, MethodWeaverHelper.IGNORED_METHOD_SIGN);
         ClassReader cr = new ClassReader(classfileBuffer);
