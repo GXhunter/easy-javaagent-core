@@ -2,7 +2,7 @@ package com.gxhunter.agent.core.utils;
 
 import java.util.Random;
 
-public class StringUtils {
+public class StringUtils extends org.apache.commons.lang3.StringUtils {
     private static final String METHOD_NAME_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_0123456789";
 
     public static boolean isEmpty(String str) {

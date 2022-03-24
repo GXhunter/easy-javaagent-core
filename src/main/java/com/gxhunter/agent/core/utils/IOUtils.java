@@ -3,9 +3,11 @@ package com.gxhunter.agent.core.utils;
 import com.gxhunter.agent.core.AgentConst;
 
 import java.io.*;
-import java.net.Inet4Address;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
@@ -16,6 +18,41 @@ public class IOUtils implements AgentConst {
         URL url = new URL(urlStr);
         URLConnection urlConnection = url.openConnection();
         return urlConnection.getInputStream();
+    }
+
+    public static InetAddress localIp(String preference) {
+        int min = Integer.MAX_VALUE;
+        final AtomicReference<InetAddress> host = new AtomicReference<>();
+        for (InetAddress inetAddress : localIps()) {
+            if (StringUtils.difference(inetAddress.getHostAddress(), preference).length() < min) {
+                min = StringUtils.difference(inetAddress.getHostAddress(), preference).length();
+                host.set(inetAddress);
+            }
+        }
+        return host.get();
+    }
+
+    public static List<InetAddress> localIps() {
+        List<InetAddress> localAddress = new ArrayList<>();
+        try {
+            Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+            InetAddress ip;
+            while (allNetInterfaces.hasMoreElements()) {
+                NetworkInterface netInterface = allNetInterfaces.nextElement();
+                if (!netInterface.isLoopback() && !netInterface.isVirtual() && netInterface.isUp()) {
+                    Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
+                    while (addresses.hasMoreElements()) {
+                        ip = addresses.nextElement();
+                        if (ip instanceof Inet4Address) {
+                            localAddress.add(ip);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("IP地址获取失败" + e.toString());
+        }
+        return localAddress;
     }
 
     public static boolean isReachable(String ip,int timeout) {
