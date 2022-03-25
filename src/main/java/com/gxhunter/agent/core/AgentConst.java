@@ -16,8 +16,8 @@ public interface AgentConst {
      * 环境变量
      */
     interface SystemEnvKey{
-        String ADP_HOST = "adp";
-        String DAEMON = "daemon";
+        String AGENT_MD5 = "agent_md5";
+        String AGENT_URI = "agent_uri";
     }
 
     interface LogPrinter{

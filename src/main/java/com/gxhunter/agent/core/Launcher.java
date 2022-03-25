@@ -3,14 +3,13 @@ package com.gxhunter.agent.core;
 import com.gxhunter.agent.core.utils.IOUtils;
 import com.gxhunter.agent.core.utils.WhereIsUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.instrument.Instrumentation;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -38,6 +37,8 @@ public class Launcher implements AgentConst.ExitCode, AgentConst.ManiFestAttrKey
             loaded = true;
             URI jarURI = WhereIsUtils.getJarURI();
             File agentFile = new File(jarURI);
+            System.setProperty(AgentConst.SystemEnvKey.AGENT_MD5, IOUtils.md5(agentFile));
+            System.setProperty(AgentConst.SystemEnvKey.AGENT_URI, jarURI.toString());
             JarFile jarFile = new JarFile(agentFile);
             printUsage(jarFile.getManifest());
             if (args == null || args.isEmpty()) {
