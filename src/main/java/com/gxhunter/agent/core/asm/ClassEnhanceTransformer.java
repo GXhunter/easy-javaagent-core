@@ -11,11 +11,11 @@ import java.util.Map;
  *
  * @see MethodWeaverHelper 插件
  */
-public class HunterTransformer implements ClassFileTransformer {
+public class ClassEnhanceTransformer implements ClassFileTransformer {
 
     private final Map<String, MethodWeaverHelper> plugin;
 
-    public HunterTransformer(Map<String, MethodWeaverHelper> plugin) {
+    public ClassEnhanceTransformer(Map<String, MethodWeaverHelper> plugin) {
         this.plugin = plugin;
     }
 

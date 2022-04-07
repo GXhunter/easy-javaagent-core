@@ -1,6 +1,6 @@
 package com.gxhunter.agent.core;
 
-import com.gxhunter.agent.core.asm.HunterTransformer;
+import com.gxhunter.agent.core.asm.ClassEnhanceTransformer;
 import com.gxhunter.agent.core.asm.MethodWeaverHelper;
 import com.gxhunter.agent.core.plugin.PluginClassLoader;
 import com.gxhunter.agent.core.plugin.PluginEntry;
@@ -38,12 +38,12 @@ public class Initializer implements AgentConst.ManiFestAttrKey,AgentConst.LogPri
             );
             PluginEntry pluginEntry = (PluginEntry) Class.forName(entryClass).newInstance();
             pluginEntry.weavers().forEach(MethodWeaverHelper::register);
-            HunterTransformer transformer = new HunterTransformer(MethodWeaverHelper.getPlugin());
+            ClassEnhanceTransformer transformer = new ClassEnhanceTransformer(MethodWeaverHelper.getPlugin());
             inst.addTransformer(transformer, true);
             inst.setNativeMethodPrefix(transformer, StringUtils.randomMethodName(15) + "_");
             for (Class loadedClass : inst.getAllLoadedClasses()) {
                 if (MethodWeaverHelper.getPlugin().containsKey(loadedClass.getName())) {
-                    System.out.println("hunter reload class：" + loadedClass.getName());
+                    System.out.println("reload class：" + loadedClass.getName());
                     inst.retransformClasses(loadedClass);
                 }
             }

@@ -67,7 +67,7 @@ public class Launcher implements AgentConst.ExitCode, AgentConst.ManiFestAttrKey
     private static void printUsage(Manifest manifest) {
         String message = new StringBuilder()
                 .append(DIVIDER).append(NEWLINE)
-                .append("\t\thunter-easy-agent-").append(manifest.getMainAttributes().getValue(VERSION))
+                .append("\t\t").append(manifest.getMainAttributes().getValue(PLUGIN_NAME)).append(manifest.getMainAttributes().getValue(VERSION))
                 .append(NEWLINE).append(NEWLINE)
                 .append("\t\t").append(manifest.getMainAttributes().getValue(DESCRIPTION))
                 .append(NEWLINE).append(NEWLINE)
