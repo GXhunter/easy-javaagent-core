@@ -97,7 +97,6 @@ public class MethodWeaverHelper {
      * @return
      */
     private static MethodWeaverHelper wovenClass(String className) {
-        plugin.putIfAbsent(className, new MethodWeaverHelper());
-        return plugin.get(className);
+        return plugin.computeIfAbsent(className, k -> new MethodWeaverHelper());
     }
 }

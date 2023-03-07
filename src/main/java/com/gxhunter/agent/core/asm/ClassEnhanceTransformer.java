@@ -23,7 +23,7 @@ public class ClassEnhanceTransformer implements ClassFileTransformer {
         if (className == null) {
             return classfileBuffer;
         }
-        String targetFullClassName = className.replaceAll("/", "\\.");
+        String targetFullClassName = className.replaceAll("/", ".");
         MethodWeaverHelper methodSign = plugin.getOrDefault(targetFullClassName, MethodWeaverHelper.IGNORED_METHOD_SIGN);
         ClassReader cr = new ClassReader(classfileBuffer);
         ClassWriter cw = new ClassWriter(Opcodes.F_FULL);

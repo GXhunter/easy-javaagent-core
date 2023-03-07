@@ -6,6 +6,7 @@ public interface AgentConst {
      */
     interface ManiFestAttrKey{
         String ENTRY_NAME = "Hunter-Agent-Plugin-Entry";
+        String CLASS_LOADER = "Hunter-Agent-ClassLoader";
         String AUTHOR = "Built-By";
         String VERSION = "Manifest-Version";
         String DESCRIPTION = "Description";

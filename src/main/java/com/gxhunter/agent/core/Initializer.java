@@ -2,7 +2,6 @@ package com.gxhunter.agent.core;
 
 import com.gxhunter.agent.core.asm.ClassEnhanceTransformer;
 import com.gxhunter.agent.core.asm.MethodWeaverHelper;
-import com.gxhunter.agent.core.plugin.PluginClassLoader;
 import com.gxhunter.agent.core.plugin.PluginEntry;
 import com.gxhunter.agent.core.utils.StringUtils;
 
@@ -25,8 +24,6 @@ public class Initializer implements AgentConst.ManiFestAttrKey,AgentConst.LogPri
                 return;
             }
             long startTime = System.currentTimeMillis();
-            ClassLoader classLoader = new PluginClassLoader(jarFile);
-            Class<?> klass = Class.forName(entryClass, false, classLoader);
             inst.appendToBootstrapClassLoaderSearch(jarFile);
             System.out.printf(
                     "%s加载插件:\t[%s:%s] by %s\nfrom: %s \n ",
@@ -41,7 +38,7 @@ public class Initializer implements AgentConst.ManiFestAttrKey,AgentConst.LogPri
             ClassEnhanceTransformer transformer = new ClassEnhanceTransformer(MethodWeaverHelper.getPlugin());
             inst.addTransformer(transformer, true);
             inst.setNativeMethodPrefix(transformer, StringUtils.randomMethodName(15) + "_");
-            for (Class loadedClass : inst.getAllLoadedClasses()) {
+            for (Class<?> loadedClass : inst.getAllLoadedClasses()) {
                 if (MethodWeaverHelper.getPlugin().containsKey(loadedClass.getName())) {
                     System.out.println("reload class：" + loadedClass.getName());
                     inst.retransformClasses(loadedClass);
