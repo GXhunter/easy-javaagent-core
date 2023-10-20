@@ -104,8 +104,8 @@ public class IOUtils implements AgentConst {
             URLConnection urlConnection = url.openConnection();
             urlConnection.setRequestProperty("Content-type", "application/json");
             urlConnection.setRequestProperty("Agent-md5", System.getProperty(SystemEnvKey.AGENT_MD5));
-            urlConnection.setConnectTimeout(5000);
-            urlConnection.setReadTimeout(5000);
+            urlConnection.setConnectTimeout(Integer.parseInt(System.getProperty(SystemEnvKey.AGENT_CONNECT_TIMEOUT,"10000")));
+            urlConnection.setReadTimeout(Integer.parseInt(System.getProperty(SystemEnvKey.AGENT_READ_TIMEOUT,"15000")));
             urlConnection.connect();
             try (InputStream inputStream = urlConnection.getInputStream()) {
                 StringBuilder sb = new StringBuilder();

@@ -19,6 +19,8 @@ public interface AgentConst {
     interface SystemEnvKey{
         String AGENT_MD5 = "agent_md5";
         String AGENT_URI = "agent_uri";
+        String AGENT_CONNECT_TIMEOUT = "CONNECT_TIMEOUT";
+        String AGENT_READ_TIMEOUT = "READ_TIMEOUT";
     }
 
     interface LogPrinter{
